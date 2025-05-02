@@ -1,7 +1,9 @@
 const db = require('../database');
 const { body, validationResult } = require('express-validator');
 
-// Middleware: validação ao criar pedido
+// ------------------------------
+// Middleware: Validação de Pedido
+// ------------------------------
 exports.validateOrder = [
   body('cliente').notEmpty().withMessage('O campo cliente é obrigatório.'),
   body('item').notEmpty().withMessage('O campo item é obrigatório.'),
@@ -17,7 +19,9 @@ exports.validateOrder = [
   },
 ];
 
-// Middleware: validação ao atualizar status
+// ------------------------------
+// Middleware: Validação de Status
+// ------------------------------
 exports.validateStatusUpdate = [
   body('status')
     .isIn(['Em preparo', 'Pronto', 'Entregue'])
@@ -31,13 +35,17 @@ exports.validateStatusUpdate = [
   },
 ];
 
-// Handler de erro do banco
+// ------------------------------
+// Handler de Erro do Banco
+// ------------------------------
 const handleDbError = (err, res, next, context) => {
   console.error(`Erro ao ${context}:`, err.message);
-  return next({ status: 500, message: `Erro interno ao ${context}.` });
+  return res.status(500).json({ error: `Erro interno ao ${context}.` });
 };
 
+// ------------------------------
 // Criar novo pedido
+// ------------------------------
 exports.createOrder = (req, res, next) => {
   const { cliente, item, quantidade, observacoes } = req.body;
 
@@ -61,7 +69,9 @@ exports.createOrder = (req, res, next) => {
   });
 };
 
+// ------------------------------
 // Listar todos os pedidos
+// ------------------------------
 exports.getAllOrders = (req, res, next) => {
   db.all(`SELECT * FROM orders`, [], (err, rows) => {
     if (err) return handleDbError(err, res, next, 'listar pedidos');
@@ -69,10 +79,12 @@ exports.getAllOrders = (req, res, next) => {
   });
 };
 
+// ------------------------------
 // Buscar por status
+// ------------------------------
 const getOrdersByStatus = (status, res, next) => {
   db.all(`SELECT * FROM orders WHERE status = ?`, [status], (err, rows) => {
-    if (err) return handleDbError(err, res, next, `buscar pedidos ${status}`);
+    if (err) return handleDbError(err, res, next, `buscar pedidos com status "${status}"`);
     res.json(rows);
   });
 };
@@ -89,7 +101,9 @@ exports.getDeliveredOrders = (req, res, next) => {
   getOrdersByStatus('Entregue', res, next);
 };
 
-// Atualizar status
+// ------------------------------
+// Atualizar status de pedido
+// ------------------------------
 exports.updateStatus = (req, res, next) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -105,3 +119,22 @@ exports.updateStatus = (req, res, next) => {
     res.json({ message: 'Status atualizado com sucesso.' });
   });
 };
+
+// ------------------------------
+// Excluir pedido por ID
+// ------------------------------
+exports.deleteOrder = (req, res, next) => {
+  const { id } = req.params;
+
+  const sql = `DELETE FROM orders WHERE id = ?`;
+  db.run(sql, [id], function (err) {
+    if (err) return next(err);
+
+    if (this.changes === 0) {
+      return res.status(404).json({ error: 'Pedido não encontrado.' });
+    }
+
+    res.json({ message: 'Pedido excluído com sucesso.' });
+  });
+};
+

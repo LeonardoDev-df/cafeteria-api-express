@@ -27,7 +27,7 @@ npm install
 
 Crie o banco de dados SQLite:
 
-node database/init.js
+node initDatabase.js
 
 Inicie o servidor:
 
@@ -42,23 +42,24 @@ POST /orders
 Body JSON:
 json
 {
-  "cliente": "João",
+  "cliente": "Jose silva",
   "item": "Café com leite",
   "quantidade": 2,
-  "observacoes": "Sem açúcar"
+  "observacoes": "Com açúcar"
 }
+
 📌 Listar todos os pedidos
-GET /orders
+GET http://localhost:3000/orders
 
 📌 Buscar pedidos por status
-GET /orders/status/em-preparo
+GET http://localhost:3000/orders/status/em-preparo
 
-GET /orders/status/pronto
+GET http://localhost:3000/orders/status/pronto
 
-GET /orders/status/entregue
+GET http://localhost:3000/orders/status/entregue
 
 📌 Atualizar status de um pedido
-PUT /orders/:id/status
+PUT http://localhost:3000/orders/:id/status
 
 Body JSON:
 json
@@ -66,6 +67,13 @@ json
 {
   "status": "Pronto"
 }
+
+### 📌 Deletar um pedido
+
+`DELETE  http://localhost:3000/orders/:id/delete`
+
+Exclui permanentemente um pedido do banco de dados.
+
 
 🗃️ Estrutura do Projeto
 pgsql

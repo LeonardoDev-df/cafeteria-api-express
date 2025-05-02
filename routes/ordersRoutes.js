@@ -51,5 +51,9 @@ router.get('/status/entregue', ordersController.getDeliveredOrders);
 // Atualizar o status de um pedido específico com validação
 router.put('/:id/status', validateUpdateStatus, ordersController.updateStatus);
 
+// Excluir pedido
+router.delete('/:id', ordersController.deleteOrder); // <-- ESSA É A CHAVE
+
+
 // Exporta as rotas para serem usadas no app principal
 module.exports = router;
