@@ -80,12 +80,16 @@ pgsql
 cafeteria-api/
 ├── controllers/
 │   └── ordersController.js
-├── database/
-│   ├── database.js
+├── db
+│   ├── cafeteria.db
 │   └── init.js
+├── middlewares/
+│   └── errorHandler.js
 ├── routes/
-│   └── orders.routes.js
-├── app.js
+│   └── ordersRoutes.js
+├── database.js
+├── initDatabase.js
+├── server.js
 └── package.json
 
 💡 Futuras Melhorias
@@ -93,10 +97,11 @@ Autenticação de funcionários
 
 Painel de gerenciamento com status em tempo real (Socket.io)
 
-Integração com frontend React
-
 📄 Licença
-Este projeto está sob a licença MIT.
+Este projeto é licenciado sob a licença MIT. Veja mais em LICENSE.
+
+📬 Contato
+Em caso de dúvidas ou sugestões, fique à vontade para entrar em contato.
 
 ✨ Autor
 Desenvolvido por Leonardo Lopes Borges 🚀
